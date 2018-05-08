@@ -4,7 +4,6 @@ import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { Observable } from 'rxjs';
 
 
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -23,6 +22,8 @@ export class AppComponent {
     this.items.forEach(teste => {
       console.log(teste);
     });
+
+    this.onchange();
   }
 
   getAlertas(): Observable<any[]> {
@@ -35,6 +36,25 @@ export class AppComponent {
     });
   }
 
+  playAudio() {
+    const audio = new Audio();
+    audio.src = '../assets/Ping.mp3';
+    audio.load();
+    audio.play();
+  }
+
+  onchange() {
+    this.db.list('/alertas').snapshotChanges(['child_added'])
+      .subscribe(actions => {
+        actions.forEach(action => {
+          // console.log(action.type);
+          // console.log(action.key);
+          // console.log(action.payload.val());
+          this.playAudio();
+        });
+      });
+  }
+
   /*
   getAlertas(): Observable<any[]> {
     return this.db.list('/alertas').snapshotChanges();
@@ -45,6 +65,9 @@ export class AppComponent {
       dado: 'teste'
     });
   }
+
+
+
 }
 
 
