@@ -27,7 +27,7 @@ export class AppComponent {
   }
 
   getAlertas(): Observable<any[]> {
-    return this.db.list('/alertas').snapshotChanges().map(actions => {
+    return this.db.list('/alertas', ref => ref.orderByChild('exibido').equalTo(false)).snapshotChanges().map(actions => {
       return actions.map(a => {
         const data = a.payload.val();
         const id = a.payload.key;
@@ -66,6 +66,12 @@ export class AppComponent {
     });
   }
 
+  exibido(any) {
+    console.log(any);
+
+    const itemsRef = this.db.list('/alertas');
+    itemsRef.set(any.id, { exibido: true, sensor : any.sensor, tempo: any.tempo });
+  }
 
 
 }

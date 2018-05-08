@@ -32,7 +32,7 @@
 
 
   <div *ngFor="let item of (items | async )" class="alert alert-warning alert-dismissible fade show" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="exibido(item)">
       <span aria-hidden="true">&times;</span>
     </button>
     <strong>Sensor: {{item.sensor}} {{item.tempo}}</strong> 
