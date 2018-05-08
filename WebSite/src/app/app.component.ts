@@ -16,8 +16,13 @@ export class AppComponent {
 
   constructor(private db: AngularFireDatabase) {
 
+    // this.addAlertaTeste();
     this.items = this.getAlertas();
-    console.log(this.items);
+    // console.log(this.items);
+
+    this.items.forEach(teste => {
+      console.log(teste);
+    });
   }
 
   getAlertas(): Observable<any[]> {
@@ -27,6 +32,17 @@ export class AppComponent {
         const id = a.payload.key;
         return { id, ...data };
       });
+    });
+  }
+
+  /*
+  getAlertas(): Observable<any[]> {
+    return this.db.list('/alertas').snapshotChanges();
+  }*/
+
+  addAlertaTeste() {
+    this.db.list('/alertas').push({
+      dado: 'teste'
     });
   }
 }
