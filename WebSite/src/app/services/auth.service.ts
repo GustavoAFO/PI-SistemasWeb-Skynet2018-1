@@ -33,9 +33,9 @@ export class AuthService {
     );
   }
 
-  signInWithEmailPassword() {
+  signInWithGoogle() {
     return this._firebaseAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).then((res) => {
-
+      // Check if exist in database , otherwise logoff
       this.router.navigate(['home']);
     }).catch((err) => {
 
