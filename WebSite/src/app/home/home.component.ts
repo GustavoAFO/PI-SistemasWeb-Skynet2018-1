@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 // import { FirebaseConfig } from './../environments/firebase.config';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
-import { Observable } from 'rxjs';
+// import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-home',
