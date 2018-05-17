@@ -48,14 +48,19 @@ export class HomeComponent implements OnInit {
   }
 
   onchange() {
-    this.db.list('/alertas').snapshotChanges(['child_added'])
+    this.db.list('/alertas', ref => ref.orderByChild('exibido').equalTo(false)).snapshotChanges(['child_added'])
       .subscribe(actions => {
-        actions.forEach(action => {
-          // console.log(action.type);
-          // console.log(action.key);
-          // console.log(action.payload.val());
+        /* actions.forEach(action => {
+           // console.log(action.type);
+           // console.log(action.key);
+           // console.log(action.payload.val());
+           this.playAudio();
+         });*/
+        console.log(actions);
+        if (actions.length > 0) {
           this.playAudio();
-        });
+        }
+
       });
   }
 

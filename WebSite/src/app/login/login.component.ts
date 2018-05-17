@@ -14,6 +14,10 @@ export class LoginComponent implements OnInit {
 
   }
 
+  loginRegular() {
+
+  }
+
   loginWithGoogle() {
     this.auth.signInWithGoogle();
   }
