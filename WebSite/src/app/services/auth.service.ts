@@ -11,17 +11,23 @@ export class AuthService {
   private user: Observable<firebase.User>;
   private userDetails: firebase.User = null;
 
+  public logged: Observable<firebase.User>;
+
   constructor(private _firebaseAuth: AngularFireAuth, private router: Router) {
 
     this.user = _firebaseAuth.authState;
+    this.logged = _firebaseAuth.authState;
 
     this.user.subscribe(
       (user) => {
         if (user) {
           this.userDetails = user;
           console.log(this.userDetails);
+
+          this.router.navigate(['home']);
         } else {
           this.userDetails = null;
+
         }
       }
     );
@@ -53,9 +59,12 @@ export class AuthService {
 
   isLoggedIn() {
     if (this.userDetails == null) {
+      // this.logged = false;
       return false;
     } else {
+      // this.logged = true;
       return true;
+
     }
   }
 

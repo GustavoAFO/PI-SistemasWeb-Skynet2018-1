@@ -14,12 +14,16 @@ import { HomeComponent } from './home/home.component';
 
 import { AuthService } from './services/auth.service';
 import { AuthGuardService } from './services/auth-guard.service';
+import { GraficosComponent } from './graficos/graficos.component';
+
+import * as Chart from 'chart.js';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    HomeComponent
+    HomeComponent,
+    GraficosComponent
   ],
   imports: [
     BrowserModule,
