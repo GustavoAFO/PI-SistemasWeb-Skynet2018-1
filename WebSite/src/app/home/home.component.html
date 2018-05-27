@@ -4,23 +4,34 @@
   </div>
   <p class="lead">Sistema irá alertar quando alguém passar próximo a algum sensor.</p>
 
-  <div *ngFor="let item of items" class="alert alert-warning alert-dismissible fade show" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="exibido(item)">
-      <span aria-hidden="true">&times;</span>
-    </button>
-    <strong>Sensor: {{item.sensor}} {{item.data}} {{item.tempo}}</strong>
+
+  <!-- <div *ngFor="let primeiro of teste | async">
+    <div *ngFor="let segundo of primeiro">
+      <div *ngFor="let item of segundo">
+        {{item}}
+      </div>
+    </div>
+  </div> -->
+
+  <div *ngFor="let dia of items">
+    <p class="lead" *ngIf="dia[0]">{{dia[0].data}}</p>
+    <div *ngFor="let item of dia" class="alert alert-warning alert-dismissible fade show" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="exibido(item)">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <strong>Sensor: {{item.sensor}} {{item.data}} {{item.tempo}}</strong>
+    </div>
   </div>
+
 
 
 </div>
 
 
 
-<!-- <div *ngFor="let pai2 of (pai | async )">
-    <div *ngFor="let item of pai2" class="alert alert-warning alert-dismissible fade show" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="exibido(item)">
-        <span aria-hidden="true">&times;</span>
-      </button>
-      <strong>Sensor: {{item.sensor}} {{item.data}} {{item.tempo}}</strong>
-    </div>
-  </div> -->
+<!--  <div *ngFor="let item of items" class="alert alert-warning alert-dismissible fade show" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="exibido(item)">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <strong>Sensor: {{item.sensor}} {{item.data}} {{item.tempo}}</strong>
+  </div>-->

@@ -18,11 +18,41 @@ export class HomeComponent implements OnInit {
   // EM TESTE
   items: any[] = [];
 
+  teste: Observable<any[]>;
+
 
   constructor(private db: AngularFireDatabase) {
 
-    this.getAlertas();
-    this.onchange();
+    /*  this.getAlertas();
+     this.onchange(); */
+
+    this.teste = this.getAlertasTeste();
+    // console.log(this.teste);
+
+    /* this.teste.forEach(t => {
+      console.log(t);
+      t.forEach(z => {
+        console.log(z);
+        z.forEach(p => {
+          console.log(p);
+        });
+      });
+    }); */
+
+    this.teste.subscribe(sub => {
+
+      this.items = [];
+
+      sub.forEach(primeiro => {
+        primeiro.forEach(segundo => {
+          // console.log(segundo);
+          this.items.push(segundo);
+        });
+      });
+
+      // console.log(this.items);
+      // console.log(sub);
+    });
 
     /* this.items.forEach(teste => {
       console.log(teste);
@@ -43,7 +73,25 @@ export class HomeComponent implements OnInit {
 
 
 
-
+  getAlertasTeste(): Observable<any[]> {
+    return this.db.list('/alertas').snapshotChanges().map(primeiro => {
+      return primeiro.map(segundo => {
+        // const data = segundo.payload.val();
+        // const id = segundo.payload.key;
+        // console.log(segundo.key);
+        // return { id, ...data };
+        return this.db.list('/alertas/' + segundo.key,
+          ref => ref.orderByChild('exibido').equalTo(false)).snapshotChanges().map(terceiro => {
+            return terceiro.map(quarto => {
+              const data2 = quarto.payload.val();
+              const id2 = quarto.payload.key;
+              // console.log({ id2, ...data2 });
+              return { id2, ...data2 };
+            });
+          });
+      });
+    });
+  }
 
 
 
