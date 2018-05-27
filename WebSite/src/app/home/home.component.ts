@@ -12,34 +12,20 @@ import { Observable } from 'rxjs/Observable';
 })
 export class HomeComponent implements OnInit {
   title = 'app';
+
+
   // items: Observable<any[]>;
-
-
-  // EM TESTE
   items: any[] = [];
 
-  teste: Observable<any[]>;
+  itemsObservable: Observable<any[]>;
 
 
   constructor(private db: AngularFireDatabase) {
 
-    /*  this.getAlertas();
-     this.onchange(); */
+    this.itemsObservable = this.getAlertasTeste();
 
-    this.teste = this.getAlertasTeste();
-    // console.log(this.teste);
 
-    /* this.teste.forEach(t => {
-      console.log(t);
-      t.forEach(z => {
-        console.log(z);
-        z.forEach(p => {
-          console.log(p);
-        });
-      });
-    }); */
-
-    this.teste.subscribe(sub => {
+    this.itemsObservable.subscribe(sub => {
 
       this.items = [];
 
@@ -50,13 +36,9 @@ export class HomeComponent implements OnInit {
         });
       });
 
-      // console.log(this.items);
-      // console.log(sub);
+
     });
 
-    /* this.items.forEach(teste => {
-      console.log(teste);
-    }); */
   }
 
   ngOnInit() {
@@ -65,7 +47,8 @@ export class HomeComponent implements OnInit {
 
 
 
-  // TESTAR COM $groupid ('/alertas/' + $groupid) E TESTAR DUPLICANDO DATA
+  // TESTAR COM $groupid (TESTEI NAO FUNCIONA) ('/alertas/' + $groupid)
+  // TESTAR DUPLICANDO DATA
   // DUPLICANDO FUNCIONARÁ PROVAVELMENTE, CADASTRAR ALERTAS EM /alertas e EM PASTA COM DATA,
   // AO EXIBIR DELETAR O QUE ESTA DENTRO DO ALERTAS E DEIXAR OS DAS PASTAS
 
@@ -83,10 +66,16 @@ export class HomeComponent implements OnInit {
         return this.db.list('/alertas/' + segundo.key,
           ref => ref.orderByChild('exibido').equalTo(false)).snapshotChanges().map(terceiro => {
             return terceiro.map(quarto => {
-              const data2 = quarto.payload.val();
-              const id2 = quarto.payload.key;
+
+              if (quarto.type === 'child_added') {
+                // console.log('apitou');
+                this.playAudio();
+              }
+
+              const data = quarto.payload.val();
+              const id = quarto.payload.key;
               // console.log({ id2, ...data2 });
-              return { id2, ...data2 };
+              return { id, ...data };
             });
           });
       });
@@ -96,8 +85,8 @@ export class HomeComponent implements OnInit {
 
 
 
-
-  getAlertas() {
+  // FUNCIONA MAS SEM OBSERVABLE
+  /* getAlertas() {
     this.db.list('/alertas').snapshotChanges().subscribe((res) => {
       this.items = [];
 
@@ -116,7 +105,7 @@ export class HomeComponent implements OnInit {
         });
       });
     });
-  }
+  } */
 
 
   /* getAlertas(): Observable<any[]> {
@@ -138,7 +127,11 @@ export class HomeComponent implements OnInit {
     audio.play();
   }
 
-  onchange() {
+
+
+
+  // NAO É MAIS NECESSARIO
+  /* onchange() {
     this.db.list('/alertas').snapshotChanges()
       .subscribe(actions => {
         actions.forEach((filho) => {
@@ -147,23 +140,16 @@ export class HomeComponent implements OnInit {
               // console.log(alertas);
 
               alertas.forEach(alerta => {
-                /* console.log(alerta.type);
-                console.log(alerta.key);
-                console.log(alerta.payload.val()); */
                 if (alerta.type === 'child_added') {
-                  // console.log('apitou');
                   this.playAudio();
                 }
               });
-
-
-              /* if (alertas.length > 0) {
-                this.playAudio();
-              } */
             });
         });
       });
-  }
+  } */
+
+
 
   // NOT WORKING
   /* onchange() {
