@@ -1,13 +1,13 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 
-const char* ssid = "GustavoAFO";
+const char* ssid = "GustavoAF";
 
 const char* password = "gustavo6";
 
 
 /* HC-SR501 Motion Detector */
-#define pirPin D4 // Input for HC-S501
+#define pirPin D1 // Input for HC-S501
 int pirValue; // Place to store read PIR Value
 
 void setup() {
@@ -63,7 +63,7 @@ void loop() {
   }
   
   
-  delay(5000);
+  delay(2500);
 }
 
 
