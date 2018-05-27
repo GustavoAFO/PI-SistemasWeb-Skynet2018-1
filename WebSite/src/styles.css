@@ -28,3 +28,12 @@ body {
     margin-top: -60px;
     background-color: #f5f5f5;
   }
+
+
+  canvas{
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+  }
