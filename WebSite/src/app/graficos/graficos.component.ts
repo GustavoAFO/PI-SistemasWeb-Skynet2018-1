@@ -2,8 +2,6 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import * as Chart from 'chart.js';
 import { Observable } from 'rxjs/Observable';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
-import { distinctUntilChanged } from 'rxjs-compat/operator/distinctUntilChanged';
-import { distinct } from 'rxjs-compat/operator/distinct';
 
 
 @Component({
@@ -12,77 +10,118 @@ import { distinct } from 'rxjs-compat/operator/distinct';
   styleUrls: ['./graficos.component.css']
 })
 export class GraficosComponent implements OnInit, AfterViewInit {
-  items: Observable<any[]>;
-  dias: any[];
+  items: any[];
+  dias: any[] = []; // LABELS
+  data: any[] = []; // DATA
 
-  constructor(private db: AngularFireDatabase) {
-
-    this.items = this.getAlertas();
-
-    this.items.forEach((teste) => {
-      console.log(teste);
-      teste.forEach((segundo) => {
-        console.log(segundo);
-      });
-
-    });
-
-    /*
-    {
-      'dia 1':{
-        'dasdsa' : 'SDadasd',
-        'dsadasd' : 'dsadsad'
-      },
-      'dia 2':{
-        'dasdsa' : 'SDadasd',
-        'dsadasd' : 'dsadsad'
-      }
-
-    }*/
-
-
-
-  }
-
+  counter = 0;
 
   canvas: any;
   ctx: any;
 
+  chart: Chart;
+  constructor(private db: AngularFireDatabase) {
+  }
+
+
   ngAfterViewInit() {
+
     this.canvas = document.getElementById('myChart');
     this.ctx = this.canvas.getContext('2d');
 
     const myChart = new Chart(this.ctx, {
       type: 'line',
       data: {
-        labels: ['New', 'New', 'On Hold'],
+        labels: this.dias/* ['New', 'New', 'On Hold'] */,
         datasets: [{
-          label: '# of Votes',
-          data: [1, 2, 3],
+          label: 'ALERTAS GERADOS ATÉ O MOMENTO',
+          data: this.data/* [1, 2, 3] */,
           backgroundColor: [
             'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)'
+            'rgba(255, 99, 132, 1)',
+            'rgba(255, 99, 132, 1)'
           ],
-          borderWidth: 1
+          borderWidth: 1,
         }]
       },
       options: {
         responsive: false
       }
     });
-  }
 
+    this.chart = myChart;
+    this.getAlertas();
+  }
 
   ngOnInit() {
   }
 
-  getAlertas(): Observable<any[]> {
-    return this.db.list('/alertas', ref => ref.orderByChild('exibido').equalTo(false)).snapshotChanges().map(actions => {
-      return actions.map(a => {
-        const data = a.payload.val();
-        const id = a.payload.key;
-        return { id, ...data };
+  getAlertas() {
+    this.db.list('/alertas').snapshotChanges().subscribe((res) => {
+
+      res.forEach((tipo) => {
+        // console.log(tipo);
+        if (tipo.type === 'child_changed') {
+          this.items = [];
+          this.dias = [];
+          this.data = [];
+
+        }
+      });
+      /* this.items = [];
+      this.dias = [];
+      this.data = []; */
+
+      res.forEach((pai) => {
+
+        if (!this.dias[pai.key]) {
+          this.dias.push(pai.key);
+          console.log(this.dias);
+        }
+        // this.dias.push(pai.key);
+
+        this.db.list('/alertas/' + pai.key).snapshotChanges().subscribe(actions => {
+
+          this.counter = 0;
+
+          actions.map(a => {
+
+            this.counter++;
+            // console.log('aumentou');
+
+            const data = a.payload.val();
+            const id = a.payload.key;
+
+
+
+          });
+
+
+          this.data.push(this.counter);
+          console.log(this.data);
+
+          // console.log(this.counter);
+
+          this.chart.data = {
+            labels: this.dias,
+            datasets: [{
+              label: 'ALERTAS GERADOS ATÉ O MOMENTO',
+              data: this.data,
+              backgroundColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(255, 99, 132, 1)'
+              ],
+              borderWidth: 10,
+              borderColor: 'rgba(255, 99, 132, 1)'
+            }]
+          };
+
+          this.chart.update();
+
+        });
+
+
       });
     });
   }

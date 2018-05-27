@@ -15,6 +15,7 @@ app.get('/timestamp', (request, response) => {
 
 
 	var today = new Date();
+	today.setHours(today.getHours() - 3);
 	var dd = today.getDate();
 	var mm = today.getMonth() + 1; //January is 0!
 
@@ -47,7 +48,7 @@ app.get('/timestamp', (request, response) => {
 
 	var tempo = horas + ':' + minutos + ':' + seconds;
 
-	var ref = db.ref("/alertas/naoExibido/" + dd + '-' + mm + '-' + yyyy);
+	var ref = db.ref("/alertas/" + dd + '-' + mm + '-' + yyyy);
 
 	ref.push({
 

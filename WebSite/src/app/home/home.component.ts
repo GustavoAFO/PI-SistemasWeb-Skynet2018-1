@@ -12,102 +12,64 @@ import { Observable } from 'rxjs/Observable';
 })
 export class HomeComponent implements OnInit {
   title = 'app';
-  items: Observable<any[]>;
+  // items: Observable<any[]>;
 
 
   // EM TESTE
-  movies: any[] = [];
+  items: any[] = [];
 
 
   constructor(private db: AngularFireDatabase) {
 
-    // this.addAlertaTeste();
-    // this.items = this.getAlertas();
-    // console.log(this.items);
-    // this.items = this.getAlertas();
-
-
-
-
-    // this.onchange();
-
-
     this.getAlertas();
     this.onchange();
 
-
-
-    // this.items = this.getAlertasFundo('26-05-2018');
-    // this.items = this.getAlertas();
-    // console.log(this.items);
-
-
-    /*
-    this.items.forEach(teste => {
+    /* this.items.forEach(teste => {
       console.log(teste);
-    });*/
+    }); */
   }
 
   ngOnInit() {
 
   }
 
-  getAlertas() {
-    this.db.list('/alertas/naoExibido').snapshotChanges().subscribe((res) => {
-      this.movies = [];
-      res.forEach((pai) => {
-        this.db.list('/alertas/naoExibido/' + pai.key).snapshotChanges().subscribe(actions => {
-          // console.log('actions');
-          if (actions.length > 0) {
-            this.playAudio();
-          }
 
+
+  // TESTAR COM $groupid ('/alertas/' + $groupid) E TESTAR DUPLICANDO DATA
+  // DUPLICANDO FUNCIONARÁ PROVAVELMENTE, CADASTRAR ALERTAS EM /alertas e EM PASTA COM DATA,
+  // AO EXIBIR DELETAR O QUE ESTA DENTRO DO ALERTAS E DEIXAR OS DAS PASTAS
+
+
+
+
+
+
+
+
+
+
+
+  getAlertas() {
+    this.db.list('/alertas').snapshotChanges().subscribe((res) => {
+      this.items = [];
+
+      res.forEach((pai) => {
+        // console.log(pai.key);
+        this.db.list('/alertas/' + pai.key, ref => ref.orderByChild('exibido').equalTo(false)).snapshotChanges().subscribe(actions => {
+          // console.log('pai.key');
+          // console.log(actions);
           actions.map(a => {
             // console.log(a);
             const data = a.payload.val();
             const id = a.payload.key;
-            console.log({ id, ...data });
-            // this.movies = [{ id, ...data }];
-            this.movies.push({ id, ...data });
+            // console.log({ id, ...data });
+            this.items.push({ id, ...data });
           });
         });
       });
     });
   }
 
-  /* getAlertas(): Observable<any[]> {
-    return this.db.list('/alertas/naoExibido').snapshotChanges().map(actions => {
-      return actions.map(a => {
-        console.log(a.key);
-        return this.db.list('/alertas/naoExibido/' + a.key).snapshotChanges().map(tipo1 => {
-          return tipo1.map(tipo2 => {
-            const data = tipo2.payload.val();
-            const id = tipo2.payload.key;
-            console.log(data);
-            return { id, ...data };
-          });
-        });
-      });
-    });
-  } */
-
-
-
-  /*  getAlertas() {
-     this.db.list('/alertas/naoExibido').snapshotChanges().map(actions => {
-       actions.map(a => {
-         console.log(a.key);
-          this.db.list('/alertas/naoExibido/' + a.key).snapshotChanges().map(tipo1 => {
-            tipo1.map(tipo2 => {
-              const data = tipo2.payload.val();
-              const id = tipo2.payload.key;
-              console.log(data);
-              // this.items = { id, ...data };
-            });
-          });
-       });
-     });
-   } */
 
   /* getAlertas(): Observable<any[]> {
     return this.db.list('/alertas', ref => ref.orderByChild('exibido').equalTo(false)).snapshotChanges().map(actions => {
@@ -128,24 +90,44 @@ export class HomeComponent implements OnInit {
     audio.play();
   }
 
+  onchange() {
+    this.db.list('/alertas').snapshotChanges()
+      .subscribe(actions => {
+        actions.forEach((filho) => {
+          this.db.list('/alertas/' + filho.key, ref => ref.orderByChild('exibido').equalTo(false)).snapshotChanges(['child_added'])
+            .subscribe((alertas) => {
+              // console.log(alertas);
+
+              alertas.forEach(alerta => {
+                /* console.log(alerta.type);
+                console.log(alerta.key);
+                console.log(alerta.payload.val()); */
+                if (alerta.type === 'child_added') {
+                  // console.log('apitou');
+                  this.playAudio();
+                }
+              });
+
+
+              /* if (alertas.length > 0) {
+                this.playAudio();
+              } */
+            });
+        });
+      });
+  }
 
   // NOT WORKING
-  onchange() {
-    this.db.list('/alertas'/* , ref => ref.orderByChild('exibido').equalTo(false) */).snapshotChanges(['child_added'])
+  /* onchange() {
+    this.db.list('/alertas').snapshotChanges(['child_added'])
       .subscribe(actions => {
-        /* actions.forEach(action => {
-           // console.log(action.type);
-           // console.log(action.key);
-           // console.log(action.payload.val());
-           this.playAudio();
-         });*/
         // console.log(actions);
         if (actions.length > 0) {
           this.playAudio();
         }
 
       });
-  }
+  } */
 
   /* addAlertaTeste() {
     this.db.list('/alertas').push({
@@ -154,10 +136,14 @@ export class HomeComponent implements OnInit {
   } */
 
   exibido(any) {
-    console.log(any);
+    // console.log(any);
+    const re = /\//gi;
+    const novaData = any.data.replace(re, '-');
+    // novaData = novaData.replace('/', '-');
 
-    // const itemsRef = this.db.list('/alertas');
-    // itemsRef.set(any.id, { exibido: true, sensor: any.sensor, tempo: any.tempo });
+    // console.log(novaData);
+    const itemsRef = this.db.list('/alertas/' + novaData);
+    itemsRef.set(any.id, { exibido: true, sensor: any.sensor, tempo: any.tempo, data: any.data });
   }
 
 
