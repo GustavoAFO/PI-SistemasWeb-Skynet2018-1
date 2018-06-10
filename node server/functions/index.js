@@ -11,8 +11,7 @@ var db = admin.database();
 
 const app = express();
 
-app.get('/timestamp', (request, response) => {
-
+app.post('/timestamp', (request, response) => {
 
 	var today = new Date();
 	today.setHours(today.getHours() - 3);
@@ -30,13 +29,47 @@ app.get('/timestamp', (request, response) => {
 	today = dd + '/' + mm + '/' + yyyy;
 
 
+	var d = new Date(Date.now());
+	d.setHours(d.getHours() - 3);
+
+	var horas = d.getHours();
+	var minutos = d.getMinutes();
+	var seconds = d.getSeconds();
+
+	var tempo = horas + ':' + minutos + ':' + seconds;
+
+	var ref = db.ref("/alertas/" + dd + '-' + mm + '-' + yyyy);
+
+	ref.push({
+
+		nodeMCU: request.body.nodeMCU,
+		sensor: request.body.sensor,
+		exibido: false,
+		tempo: tempo,
+		data: today
+
+	});
+
+	response.send('data: ' + today + ' hora: ' + tempo + ' Teste: ' + JSON.stringify(request.body));
+});
 
 
+app.get('/timestamp', (request, response) => {
 
+	var today = new Date();
+	today.setHours(today.getHours() - 3);
+	var dd = today.getDate();
+	var mm = today.getMonth() + 1; //January is 0!
 
+	var yyyy = today.getFullYear();
+	if (dd < 10) {
+		dd = '0' + dd;
+	}
+	if (mm < 10) {
+		mm = '0' + mm;
+	}
 
-
-
+	today = dd + '/' + mm + '/' + yyyy;
 
 
 	var d = new Date(Date.now());
@@ -52,6 +85,7 @@ app.get('/timestamp', (request, response) => {
 
 	ref.push({
 
+		nodeMCU: "teste",
 		sensor: "MK0",
 		exibido: false,
 		tempo: tempo,
