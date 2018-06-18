@@ -31,8 +31,27 @@ export class HomeComponent implements OnInit {
 
       sub.forEach(primeiro => {
         primeiro.forEach(segundo => {
-          // console.log(segundo);
+          //console.log(segundo);
+
+
+          //REMOVE OS ALERTAS DE NODES NAO CADASTRADOS
+          segundo.forEach(terceiro => {
+            var counter = 0;
+            this.db.list('/Nodes', ref => ref.orderByChild('nodeMCU').equalTo(terceiro.nodeMCU)).snapshotChanges().forEach(teste => {
+
+              if (counter == 0 && teste.length == 0) {
+                var index = segundo.findIndex(x => x.id == terceiro.id);
+
+                segundo.splice(index, 1);
+              }
+
+              counter++;
+            });
+          });
+          
           this.items.push(segundo);
+
+
         });
       });
 

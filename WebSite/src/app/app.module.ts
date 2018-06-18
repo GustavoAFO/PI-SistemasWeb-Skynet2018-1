@@ -17,13 +17,15 @@ import { AuthGuardService } from './services/auth-guard.service';
 import { GraficosComponent } from './graficos/graficos.component';
 
 import * as Chart from 'chart.js';
+import { GerenciaNodesComponent } from './gerencia-nodes/gerencia-nodes.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     HomeComponent,
-    GraficosComponent
+    GraficosComponent,
+    GerenciaNodesComponent
   ],
   imports: [
     BrowserModule,

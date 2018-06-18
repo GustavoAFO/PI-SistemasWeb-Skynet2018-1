@@ -60,8 +60,8 @@ export class GraficosComponent implements OnInit, AfterViewInit {
     this.db.list('/alertas').snapshotChanges().subscribe((res) => {
 
       res.forEach((tipo) => {
-        // console.log(tipo);
-        if (tipo.type === 'child_changed') {
+        //console.log(tipo);
+        if (tipo.type === 'child_changed' || tipo.type === 'child_added') {
           this.items = [];
           this.dias = [];
           this.data = [];
@@ -76,7 +76,7 @@ export class GraficosComponent implements OnInit, AfterViewInit {
 
         if (!this.dias[pai.key]) {
           this.dias.push(pai.key);
-          console.log(this.dias);
+          //console.log(this.dias);
         }
         // this.dias.push(pai.key);
 

@@ -6,6 +6,9 @@
       "$groupid": {
         ".indexOn": "exibido"
       }
+    },
+    "Nodes":{
+     ".indexOn": "nodeMCU"
     }
   }
 }
