@@ -1,11 +1,17 @@
 <div class="container">
-  <div class="row mt-3" >
+  <div class="row mt-3">
 
     <h1 style="Margin: 0 auto; ">Gráficos gerados em tempo real</h1>
 
 
   </div>
-
+  <div class="row mt-3">
+    <p class="form-group">Data Inicial</p>
+    <input type="date" class="form-control form-group" [(ngModel)]="dataPesquisa.inicial">
+    <p class="form-group">Data Final</p>
+    <input type="date" class="form-control form-group" [(ngModel)]="dataPesquisa.final">
+    <input type="button" value="Buscar" (click)="atualizar()" class="btn btn-secondary">
+  </div>
   <div class="row" style="padding-top: 60px">
 
 
