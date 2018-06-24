@@ -18,6 +18,7 @@ import { GraficosComponent } from './graficos/graficos.component';
 
 import * as Chart from 'chart.js';
 import { GerenciaNodesComponent } from './gerencia-nodes/gerencia-nodes.component';
+import { GraficoSensoresComponent } from './grafico-sensores/grafico-sensores.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { GerenciaNodesComponent } from './gerencia-nodes/gerencia-nodes.componen
     LoginComponent,
     HomeComponent,
     GraficosComponent,
-    GerenciaNodesComponent
+    GerenciaNodesComponent,
+    GraficoSensoresComponent
   ],
   imports: [
     BrowserModule,
