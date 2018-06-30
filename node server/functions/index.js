@@ -1,6 +1,6 @@
 const functions = require('firebase-functions');
 const express = require('express');
-//const cors = require('cors');
+const cors = require('cors');
 
 //var firebase = require("firebase");
 const admin = require("firebase-admin");
@@ -11,7 +11,30 @@ var db = admin.database();
 
 
 const app = express();
-//app.use(cors({ origin: true }));
+app.use(cors({ origin: true }));
+
+app.post('/cadastro-node', (request, response) => {
+	//FALTA CHECAR SE ELE REALMENTE FOI CADASTRADO
+	var counter = 0;
+	
+	return db.ref("/listagem_home").orderByChild("nodeMCU").equalTo(request.body.nodeMCU).once("value").then(val => {
+		
+		val.forEach(element => {
+			db.ref("/listagem_home/" + element.key).set({ cadastrado_exibido: "true_false"
+			, data: element.val().data, exibido: false
+			, nodeMCU: element.val().nodeMCU, pasta: element.val().pasta
+			, sensor: element.val().sensor, tempo: element.val().tempo });
+			counter++;
+		});
+
+
+		return val;
+	}).then(res => {
+		return response.send("ALTERANDO: " + counter /* + "VAL" + res + ' Teste: ' + JSON.stringify(res) */);
+	});
+
+});
+
 
 app.post('/timestamp', (request, response) => {
 
@@ -28,7 +51,7 @@ app.post('/timestamp', (request, response) => {
 		mm = '0' + mm;
 	}
 
-	dd = dd-1;
+	dd = dd - 2;
 
 	today = dd + '/' + mm + '/' + yyyy;
 	todaye = dd + '-' + mm + '-' + yyyy;
@@ -45,8 +68,10 @@ app.post('/timestamp', (request, response) => {
 		yyyy);
 
 
-	var confirmacao = db.ref("/Nodes").orderByChild("nodeMCU").equalTo(request.body.nodeMCU).once("value").then(snapshot => {
+	var confirmacao = db.ref("/nodes").orderByChild("nome_cadastrado").equalTo(request.body.nodeMCU + "_true").once("value").then(snapshot => {
 		var confirma;
+
+
 		if (snapshot.exists()) {
 			ref.push({
 				nodeMCU: request.body.nodeMCU,
@@ -54,7 +79,8 @@ app.post('/timestamp', (request, response) => {
 				exibido: false,
 				tempo: tempo,
 				data: today,
-				pasta: todaye
+				pasta: todaye,
+				cadastrado_exibido: "true_false"
 			});
 
 			db.ref("/cadastrados").push({
@@ -63,11 +89,33 @@ app.post('/timestamp', (request, response) => {
 				exibido: false,
 				tempo: tempo,
 				data: today,
-				pasta: todaye
+				pasta: todaye,
+				cadastrado_exibido: "true_false"
+			});
+
+			db.ref("/listagem_home").push({
+				nodeMCU: request.body.nodeMCU,
+				sensor: request.body.sensor,
+				exibido: false,
+				tempo: tempo,
+				data: today,
+				pasta: todaye,
+				cadastrado_exibido: "true_false"
 			});
 
 			confirma = "SIM";
 		} else {
+			db.ref("/nodes/" + request.body.nodeMCU).set({ nome: request.body.nodeMCU, nome_cadastrado: request.body.nodeMCU + "_false", cadastrado: "false", nick: "" });
+
+			ref.push({
+				nodeMCU: request.body.nodeMCU,
+				sensor: request.body.sensor,
+				exibido: false,
+				tempo: tempo,
+				data: today,
+				pasta: todaye,
+				cadastrado_exibido: "false_false"
+			});
 
 			db.ref("/nao_cadastrados").push({
 				nodeMCU: request.body.nodeMCU,
@@ -75,7 +123,18 @@ app.post('/timestamp', (request, response) => {
 				exibido: false,
 				tempo: tempo,
 				data: today,
-				pasta: todaye
+				pasta: todaye,
+				cadastrado_exibido: "false_false"
+			});
+
+			db.ref("/listagem_home").push({
+				nodeMCU: request.body.nodeMCU,
+				sensor: request.body.sensor,
+				exibido: false,
+				tempo: tempo,
+				data: today,
+				pasta: todaye,
+				cadastrado_exibido: "false_false"
 			});
 
 			confirma = "NAO";
@@ -112,7 +171,7 @@ app.get('/timestamp', (request, response) => {
 	}
 
 	today = dd + '/' + mm + '/' + yyyy;
-
+	todaye = dd + '-' + mm + '-' + yyyy;
 
 	var d = new Date(Date.now());
 	d.setHours(d.getHours() - 3);
@@ -131,8 +190,18 @@ app.get('/timestamp', (request, response) => {
 		sensor: "MK0",
 		exibido: false,
 		tempo: tempo,
-		data: today
+		data: today,
+		pasta: todaye
 
+	});
+
+	db.ref("/cadastrados").push({
+		nodeMCU: request.body.nodeMCU,
+		sensor: request.body.sensor,
+		exibido: false,
+		tempo: tempo,
+		data: today,
+		pasta: todaye
 	});
 
 	response.send('data: ' + today + ' hora: ' + tempo + "TIPO: GET");

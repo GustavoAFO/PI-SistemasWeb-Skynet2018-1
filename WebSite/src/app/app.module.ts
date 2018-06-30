@@ -19,6 +19,7 @@ import { GraficosComponent } from './graficos/graficos.component';
 import * as Chart from 'chart.js';
 import { GerenciaNodesComponent } from './gerencia-nodes/gerencia-nodes.component';
 import { GraficoSensoresComponent } from './grafico-sensores/grafico-sensores.component';
+import { HttpModule} from '@angular/http';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { GraficoSensoresComponent } from './grafico-sensores/grafico-sensores.co
     AngularFireDatabaseModule,
     AngularFireAuthModule,
     FormsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpModule
   ],
   providers: [AuthService, AuthGuardService],
   bootstrap: [AppComponent]

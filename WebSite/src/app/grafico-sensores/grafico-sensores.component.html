@@ -13,8 +13,8 @@
 
     <p class="form-group">NODE MCU</p>
     <select class="form-control form-group custom-select" [(ngModel)]="selectedNode">
-      <option value="TODOS">Todos</option>
-      <option *ngFor="let node of nodes | async" value="{{node.nodeMCU}}">{{node.nodeMCU}}</option>
+      <option value="TODOS">TODOS</option>
+      <option *ngFor="let node of nodes | async" value="{{node.nome}}">{{node.nome}}</option>
     </select>
 
 

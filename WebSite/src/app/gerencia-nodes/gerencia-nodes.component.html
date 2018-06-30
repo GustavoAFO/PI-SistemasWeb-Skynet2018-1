@@ -4,19 +4,19 @@
   <p class="lead">Lista de NodeMCU's Não Cadastrados:</p>
 
 
-  <div *ngFor="let item of itemsTeste" class="alert alert-warning alert-dismissible fade show" role="alert">
+  <div *ngFor="let item of itemsObservable | async" class="alert alert-warning alert-dismissible fade show" role="alert">
     <div class="row">
       <div class="col-sm-10">
         <span>
           <strong>
-            NodeMCU: {{item}}
+            NodeMCU: {{item.nome}}
           </strong>
           <!-- {{item.data}} {{item.tempo}} -->
         </span>
       </div>
       <div class="col-sm-2">
-        <!--  -->
-        <button type="button" class="btn btn-primary" data-dismiss="alert" (click)="cadastrar(item)">
+        <!-- data-dismiss="alert" -->
+        <button type="button" class="btn btn-primary"  (click)="cadastrar(item)">
           CADASTRAR
         </button>
       </div>

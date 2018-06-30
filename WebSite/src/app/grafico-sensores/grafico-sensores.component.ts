@@ -93,7 +93,7 @@ export class GraficoSensoresComponent implements OnInit, AfterViewInit {
 
 
   getNodes(): Observable<any[]> {
-    return this.db.list('/Nodes'/* , ref => ref.orderByChild('exibido').equalTo(false) */).snapshotChanges().map(actions => {
+    return this.db.list('/nodes'/* , ref => ref.orderByChild('exibido').equalTo(false) */).snapshotChanges().map(actions => {
       return actions.map(a => {
         // console.log(a);
         const data = a.payload.val();

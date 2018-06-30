@@ -22,20 +22,20 @@ export class HomeComponent implements OnInit {
 
   constructor(private db: AngularFireDatabase) {
 
-    this.itemsObservable = this.getAlertasTeste();
-
+    //this.itemsObservable = this.getAlertasTeste();
+    this.itemsObservable = this.getAlertasCadastrados();
 
     this.itemsObservable.subscribe(sub => {
 
       this.items = [];
 
       sub.forEach(primeiro => {
-        primeiro.forEach(segundo => {
+        /*primeiro.forEach(segundo => {
           //console.log(segundo);
 
 
           //REMOVE OS ALERTAS DE NODES NAO CADASTRADOS
-          segundo.forEach(terceiro => {
+           segundo.forEach(terceiro => {
             var counter = 0;
             this.db.list('/Nodes', ref => ref.orderByChild('nodeMCU').equalTo(terceiro.nodeMCU)).snapshotChanges().forEach(teste => {
 
@@ -47,12 +47,14 @@ export class HomeComponent implements OnInit {
 
               counter++;
             });
-          });
+          }); 
           
           this.items.push(segundo);
+          
 
-
-        });
+        });*/
+        this.items.push(primeiro);
+        console.log(this.items);
       });
 
 
@@ -100,6 +102,26 @@ export class HomeComponent implements OnInit {
       });
     });
   }
+
+
+
+
+  getAlertasCadastrados(): Observable<any[]> {
+    return this.db.list('/listagem_home', ref => ref.orderByChild('cadastrado_exibido').equalTo("true_false")).snapshotChanges().map(actions => {
+      return actions.map(a => {
+
+        if (a.type === 'child_added') {
+          this.playAudio();
+        }
+
+        // console.log(a);
+        const data = a.payload.val();
+        const id = a.payload.key;
+        return { id, ...data };
+      });
+    });
+  }
+
 
 
 
@@ -189,14 +211,17 @@ export class HomeComponent implements OnInit {
   } */
 
   exibido(any) {
-    // console.log(any);
+    console.log(any);
     const re = /\//gi;
     const novaData = any.data.replace(re, '-');
     // novaData = novaData.replace('/', '-');
-
+    
+    this.db.list('/listagem_home').set(any.id, { exibido: true, data: any.data, nodeMCU: any.nodeMCU, pasta: any.pasta, tempo: any.tempo, sensor: any.sensor, cadastrado_exibido: "true_true" });
+    //this.db.list('/cadastrados').set(any.id, { exibido: true, data: any.data, nodeMCU: any.nodeMCU, pasta: any.pasta, tempo: any.tempo, sensor: any.sensor });
+    //this.db.list('/alertas' + novaData).set(any.id, { exibido: true, data: any.data, nodeMCU: any.nodeMCU, pasta: any.pasta, tempo: any.tempo, sensor: any.sensor });
     // console.log(novaData);
-    const itemsRef = this.db.list('/alertas/' + novaData);
-    itemsRef.set(any.id, { exibido: true, sensor: any.sensor, tempo: any.tempo, data: any.data });
+    /* const itemsRef = this.db.list('/alertas/' + novaData);
+    itemsRef.set(any.id, { exibido: true, sensor: any.sensor, tempo: any.tempo, data: any.data }); */
   }
 
 
