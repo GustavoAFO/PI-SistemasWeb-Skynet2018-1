@@ -145,39 +145,24 @@ export class GraficoSensoresComponent implements OnInit, AfterViewInit {
 
               actions.map(a => {
 
-
-                // console.log('aumentou');
-
                 const data = a.payload.val();
                 const id = a.payload.key;
 
+                var test = this.dias.findIndex(x => x == data.nodeMCU);
+                //console.log(test);
 
+                if (test < 0) {
+                  this.dias.push(data.nodeMCU);
+                  //console.log(this.dias);
+                  var test2 = this.dias.findIndex(x => x == data.nodeMCU);
+                  this.data[test2] = 1;
+                }
+                else {
 
-                if (data.nodeMCU != slcNodeMCU) {
-
-                  if (!this.dias[data.nodeMCU]) {
-                    this.dias.push(data.nodeMCU);
-                    //console.log(this.dias);
-                  }
-
-                  if (slcNodeMCU != "") {
-                    //this.data.push(this.counter);
-                    secondCounter++;
-                  }
-
-                  slcNodeMCU = data.nodeMCU;
-
-
-                  this.counter = 0;
+                  this.data[test]++;
                 }
 
-                this.counter++;
-                //this.data[data.nodeMCU] = this.counter;
-                this.data[secondCounter] = this.counter;
 
-                /* console.log(this.data.map(item => {
-  
-                })); */
 
               });
 
