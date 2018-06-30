@@ -51,7 +51,7 @@ app.post('/timestamp', (request, response) => {
 		mm = '0' + mm;
 	}
 
-	dd = dd - 2;
+	//dd = dd - 2;
 
 	today = dd + '/' + mm + '/' + yyyy;
 	todaye = dd + '-' + mm + '-' + yyyy;

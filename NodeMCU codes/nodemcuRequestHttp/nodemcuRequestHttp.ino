@@ -56,9 +56,11 @@ void loop() {
 
     char JSONmessageBuffer[300];
     JSONencoder.prettyPrintTo(JSONmessageBuffer, sizeof(JSONmessageBuffer));
-    Serial.println(JSONmessageBuffer);
+    //Serial.println(JSONmessageBuffer);
     
-    http.begin("https://sensoresskynet20181.firebaseapp.com/timestamp/","AB:37:A5:6C:F7:86:1B:F2:C8:29:F9:B2:C9:38:87:47:5D:D4:86:C5"); //HTTP
+    //http.begin("https://sensoresskynet20181.firebaseapp.com/timestamp/","AB:37:A5:6C:F7:86:1B:F2:C8:29:F9:B2:C9:38:87:47:5D:D4:86:C5"); //HTTP
+    http.begin("https://us-central1-sensoresskynet20181.cloudfunctions.net/app/timestamp/","5E:48:67:81:3D:31:A2:EE:14:37:5D:E9:D8:5A:F4:95:2F:7A:A8:24"); //HTTP
+    
     http.addHeader("Content-Type", "application/json");
  
     int httpCode = http.POST(JSONmessageBuffer);

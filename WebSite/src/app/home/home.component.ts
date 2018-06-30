@@ -26,10 +26,11 @@ export class HomeComponent implements OnInit {
     this.itemsObservable = this.getAlertasCadastrados();
 
     this.itemsObservable.subscribe(sub => {
-
+      //console.log(sub);
       this.items = [];
 
-      sub.forEach(primeiro => {
+      var data;
+      sub.reverse().forEach(primeiro => {
         /*primeiro.forEach(segundo => {
           //console.log(segundo);
 
@@ -53,6 +54,10 @@ export class HomeComponent implements OnInit {
           
 
         });*/
+        if(primeiro.data != data){
+          data = primeiro.data;
+          primeiro["data_exib"] = data;
+        }
         this.items.push(primeiro);
         console.log(this.items);
       });
@@ -76,8 +81,8 @@ export class HomeComponent implements OnInit {
 
 
 
-
-  getAlertasTeste(): Observable<any[]> {
+  /* ANTIGO (ANTÉ PRÉ BANCA) */
+  /* getAlertasTeste(): Observable<any[]> {
     return this.db.list('/alertas').snapshotChanges().map(primeiro => {
       return primeiro.map(segundo => {
         // const data = segundo.payload.val();
@@ -101,7 +106,7 @@ export class HomeComponent implements OnInit {
           });
       });
     });
-  }
+  } */
 
 
 

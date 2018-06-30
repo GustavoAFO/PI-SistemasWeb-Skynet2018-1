@@ -23,10 +23,15 @@
     </div>
   </div> -->
 
-  <div>
+  
+  <!-- .reverse() -->
+  <div *ngFor="let item of items">
+
+    <p class="lead" *ngIf="item.data_exib">{{item.data_exib}}</p>
+
     <!-- data-dismiss="alert" -->
-    <div *ngFor="let item of items.reverse()" class="alert alert-warning alert-dismissible fade show" role="alert">
-      <button type="button" class="close"  aria-label="Close" (click)="exibido(item)">
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <button type="button" class="close" aria-label="Close" (click)="exibido(item)">
         <span aria-hidden="true">&times;</span>
       </button>
       <strong>NodeMCU: {{item.nodeMCU}} Sensor: {{item.sensor}} {{item.data}} {{item.tempo}}</strong>

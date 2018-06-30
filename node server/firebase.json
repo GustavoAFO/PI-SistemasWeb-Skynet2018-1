@@ -7,22 +7,5 @@
       "npm --prefix \"functions\" run lint"
     ],
     "source": "functions"
-  },
-  "hosting": {
-    "public": "public/pa",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "/timestamp",
-        "function": "app"
-      }
-    ]
-  },
-  "storage": {
-    "rules": "storage.rules"
   }
 }

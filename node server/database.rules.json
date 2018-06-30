@@ -7,8 +7,11 @@
         ".indexOn": "exibido"
       }
     },
-    "Nodes":{
-     ".indexOn": "nodeMCU"
+    "nodes":{
+     ".indexOn": "cadastrado"
+    },
+    "listagem_home":{
+      ".indexOn": "cadastrado_exibido"
     }
   }
 }
