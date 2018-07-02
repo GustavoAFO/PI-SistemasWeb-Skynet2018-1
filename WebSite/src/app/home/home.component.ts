@@ -115,6 +115,7 @@ export class HomeComponent implements OnInit {
     return this.db.list('/listagem_home', ref => ref.orderByChild('cadastrado_exibido').equalTo("true_false")).snapshotChanges().map(actions => {
       return actions.map(a => {
 
+        console.log(a.type);
         if (a.type === 'child_added') {
           this.playAudio();
         }

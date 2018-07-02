@@ -22,6 +22,7 @@ export class GraficosComponent implements OnInit, AfterViewInit {
 
   chart: Chart;
   constructor(private db: AngularFireDatabase) {
+    //this.getAlertas();
   }
 
 
@@ -86,7 +87,85 @@ export class GraficosComponent implements OnInit, AfterViewInit {
     return datett;
   }
 
+  transformDateDatabase(data) {
+    var teste = data.split("/");
+    var datett = teste[2] + "/" + teste[1] + "/" + teste[0];
+    return datett;
+  }
+
   getAlertas() {
+
+
+    this.items = [];
+    this.dias = [];
+    this.data = [];
+
+    this.db.list('/listagem_home').snapshotChanges().subscribe(actions => {
+      actions.map(a => {
+
+        //console.log(a.type);
+
+
+        // console.log(a);
+        const data = a.payload.val();
+        const id = a.payload.key;
+        // { id, ...data };
+
+        var inicial = new Date(this.transformDateSlashTela(this.dataPesquisa.inicial));
+        var final = new Date(this.transformDateSlashTela(this.dataPesquisa.final));
+        //var datett = this.transformDateSlash(data.data);
+
+        //var attdatt = new Date(datett);
+        var attdatt = new Date(this.transformDateDatabase(data.data));
+        /* console.log(inicial);
+        console.log(final);
+        console.log(attdatt); */
+
+        if (((attdatt <= final) && (attdatt >= inicial)) || (this.dataPesquisa.inicial == "" && this.dataPesquisa.final == "")) {
+          var test = this.dias.findIndex(x => x == data.data);
+          //console.log(test);
+
+          if (test < 0) {
+            this.dias.push(data.data);
+            //console.log(this.dias);
+            var test2 = this.dias.findIndex(x => x == data.data);
+            this.data[test2] = 1;
+          }
+          else {
+
+            this.data[test]++;
+          }
+        }
+
+
+      });
+
+      //console.log(this.data);
+      this.updateChart();
+    });
+  }
+
+  updateChart() {
+    this.chart.data = {
+      labels: this.dias,
+      datasets: [{
+        label: 'ALERTAS GERADOS ATÉ O MOMENTO',
+        data: this.data,
+        backgroundColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(255, 99, 132, 1)',
+          'rgba(255, 99, 132, 1)'
+        ],
+        borderWidth: 10,
+        borderColor: 'rgba(255, 99, 132, 1)'
+      }]
+    };
+
+    this.chart.update();
+
+  }
+
+  /* getAlertas() {
 
     this.items = [];
     this.dias = [];
@@ -104,9 +183,7 @@ export class GraficosComponent implements OnInit, AfterViewInit {
 
         }
       });
-      /* this.items = [];
-      this.dias = [];
-      this.data = []; */
+    
 
       res.forEach((pai) => {
 
@@ -115,27 +192,7 @@ export class GraficosComponent implements OnInit, AfterViewInit {
         var datett = this.transformDateSlash(pai.key);
 
         var attdatt = new Date(datett);
-        //console.log(datett);
-
-        //console.log(this.dataPesquisa.inicial);
-
-        /* console.log("DATA ATUAL:");
-        console.log(attdatt);
-        console.log("DATA INICIAL:");
-        console.log(inicial);
-        console.log("DATA FINAL:");
-        console.log(final);
-        */
-
-        /* console.log(attdatt);
-        if (attdatt <= final) {
-          console.log("DATA ATUAL MENOR QUE A FINAL");
-        }
-
-        if (attdatt >= inicial) {
-          console.log("DATA ATUAL MAIOR QUE A INICIAL");
-        } */
-
+        
 
 
         if (((attdatt <= final) && (attdatt >= inicial)) || (this.dataPesquisa.inicial == "" && this.dataPesquisa.final == "")) {
@@ -212,6 +269,6 @@ export class GraficosComponent implements OnInit, AfterViewInit {
 
       });
     });
-  }
+  } */
 
 }
