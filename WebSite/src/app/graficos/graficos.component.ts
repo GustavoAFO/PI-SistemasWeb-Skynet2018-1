@@ -21,6 +21,8 @@ export class GraficosComponent implements OnInit, AfterViewInit {
   ctx: any;
 
   chart: Chart;
+
+  ref: any;
   constructor(private db: AngularFireDatabase) {
     //this.getAlertas();
   }
@@ -69,9 +71,10 @@ export class GraficosComponent implements OnInit, AfterViewInit {
     teste = this.dataPesquisa.final.split("-");
     var dateFinal = teste[0] + "-" + teste[1] + "-" + teste[2];
 
-    console.log(dateInicial);
-    console.log(dateFinal);
+    //console.log(dateInicial);
+    //console.log(dateFinal);
 
+    this.ref.unsubscribe();
     this.getAlertas();
   }
 
@@ -95,12 +98,7 @@ export class GraficosComponent implements OnInit, AfterViewInit {
 
   getAlertas() {
 
-
-    this.items = [];
-    this.dias = [];
-    this.data = [];
-
-    this.db.list('/listagem_home').snapshotChanges().subscribe(actions => {
+    this.ref = this.db.list('/listagem_home').snapshotChanges().subscribe(actions => {
 
       this.items = [];
       this.dias = [];
@@ -151,7 +149,7 @@ export class GraficosComponent implements OnInit, AfterViewInit {
 
       });
 
-      //console.log(this.data);
+      console.log(this.data);
       this.updateChart();
     });
   }

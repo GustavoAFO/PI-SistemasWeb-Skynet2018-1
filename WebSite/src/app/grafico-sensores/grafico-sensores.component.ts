@@ -25,12 +25,16 @@ export class GraficoSensoresComponent implements OnInit, AfterViewInit {
   nodes: Observable<any[]>;
   selectedNode: any;
 
+  ref: any;
 
   constructor(private db: AngularFireDatabase) {
+
+
   }
 
 
   ngAfterViewInit() {
+    this.ref = this.db.list('/listagem_home');
 
     this.canvas = document.getElementById('myChart');
     this.ctx = this.canvas.getContext('2d');
@@ -74,9 +78,21 @@ export class GraficoSensoresComponent implements OnInit, AfterViewInit {
     console.log(dateInicial);
     console.log(dateFinal);
 
+
+    this.ref.unsubscribe();
+
+    if (this.selectedNode == undefined || this.selectedNode == "" || this.selectedNode == "TODOS") {
+      this.ref = this.db.list('/listagem_home');
+      console.log("BUSCANDO TODOS");
+    }
+    else {
+      this.ref = this.db.list('/listagem_home', ref => ref.orderByChild('nodeMCU').equalTo(this.selectedNode));
+      console.log("BUSCANDO POR NODE");
+    }
+    
     this.getAlertas();
 
-    console.log(this.selectedNode);
+    //console.log(this.selectedNode);
   }
 
   transformDateSlashTela(data) {
@@ -91,6 +107,11 @@ export class GraficoSensoresComponent implements OnInit, AfterViewInit {
     return datett;
   }
 
+  transformDateDatabase(data) {
+    var teste = data.split("/");
+    var datett = teste[2] + "/" + teste[1] + "/" + teste[0];
+    return datett;
+  }
 
   getNodes(): Observable<any[]> {
     return this.db.list('/nodes'/* , ref => ref.orderByChild('exibido').equalTo(false) */).snapshotChanges().map(actions => {
@@ -103,7 +124,77 @@ export class GraficoSensoresComponent implements OnInit, AfterViewInit {
     });
   }
 
+
   getAlertas() {
+   
+    this.ref = this.ref.snapshotChanges().subscribe(actions => {
+
+      this.items = [];
+      this.dias = [];
+      this.data = [];
+
+      actions.map(a => {
+
+        const data = a.payload.val();
+        const id = a.payload.key;
+        // { id, ...data };
+
+        var inicial = new Date(this.transformDateSlashTela(this.dataPesquisa.inicial));
+        var final = new Date(this.transformDateSlashTela(this.dataPesquisa.final));
+
+
+
+        var attdatt = new Date(this.transformDateDatabase(data.data));
+
+        if (((attdatt <= final) && (attdatt >= inicial)) || (this.dataPesquisa.inicial == "" && this.dataPesquisa.final == "")) {
+          var test = this.dias.findIndex(x => x == data.nodeMCU);
+
+
+          if (test < 0) {
+            this.dias.push(data.nodeMCU);
+
+            var test2 = this.dias.findIndex(x => x == data.nodeMCU);
+            this.data[test2] = 1;
+          }
+          else {
+
+            this.data[test]++;
+          }
+        }
+
+
+      });
+
+      console.log(this.data);
+      this.updateChart();
+    });
+
+
+  }
+
+  updateChart() {
+    this.chart.data = {
+      labels: this.dias,
+      datasets: [{
+        label: 'ALERTAS GERADOS ATÉ O MOMENTO',
+        data: this.data,
+        backgroundColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(255, 99, 132, 1)',
+          'rgba(255, 99, 132, 1)'
+        ],
+        borderWidth: 10,
+        borderColor: 'rgba(255, 99, 132, 1)'
+      }]
+    };
+
+    this.chart.update();
+
+  }
+
+
+
+  /* getAlertas() {
 
     this.items = [];
     this.dias = [];
@@ -123,9 +214,7 @@ export class GraficoSensoresComponent implements OnInit, AfterViewInit {
 
         }
       });
-      /* this.items = [];
-      this.dias = [];
-      this.data = []; */
+      
 
       res.forEach((pai) => {
 
@@ -229,9 +318,7 @@ export class GraficoSensoresComponent implements OnInit, AfterViewInit {
                 //this.data[data.nodeMCU] = this.counter;
                 this.data[secondCounter] = this.counter;
 
-                /* console.log(this.data.map(item => {
-  
-                })); */
+               
 
               });
 
@@ -295,7 +382,7 @@ export class GraficoSensoresComponent implements OnInit, AfterViewInit {
 
 
     });
-  }
+  } */
 
 
 
