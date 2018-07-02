@@ -101,7 +101,18 @@ export class GraficosComponent implements OnInit, AfterViewInit {
     this.data = [];
 
     this.db.list('/listagem_home').snapshotChanges().subscribe(actions => {
+
+      this.items = [];
+      this.dias = [];
+      this.data = [];
+
       actions.map(a => {
+
+        /* if (a.type == "child_added") {
+          this.items = [];
+          this.dias = [];
+          this.data = [];
+        } */
 
         //console.log(a.type);
 
