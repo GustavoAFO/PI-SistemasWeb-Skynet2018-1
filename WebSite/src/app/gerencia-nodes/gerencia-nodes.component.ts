@@ -10,10 +10,11 @@ import { Http, Headers, RequestOptions } from '@angular/http';
   styleUrls: ['./gerencia-nodes.component.css']
 })
 export class GerenciaNodesComponent implements OnInit {
-  items: any[] = [];
-  itemsTeste: any[] = [];
+  //items: any[] = [];
+  //itemsTeste: any[] = [];
 
   itemsObservable: Observable<any[]>;
+  itemsCadastradosObservable: Observable<any[]>;
   /* nodesObservable: Observable<any[]>; */
 
   headers: Headers;
@@ -21,9 +22,9 @@ export class GerenciaNodesComponent implements OnInit {
 
 
   constructor(private db: AngularFireDatabase, public http: Http) {
-    console.log("teste Gerencia de nodes");
+    //console.log("teste Gerencia de nodes");
     this.itemsObservable = this.getNodesNaoCadastrados();
-
+    this.itemsCadastradosObservable = this.getNodesCadastrados();
 
     this.headers = new Headers({
       'Content-Type': 'application/json',
@@ -120,6 +121,18 @@ export class GerenciaNodesComponent implements OnInit {
     });
   }
 
+  getNodesCadastrados(): Observable<any[]> {
+    return this.db.list('/nodes', ref => ref.orderByChild('cadastrado').equalTo("true")).snapshotChanges().map(actions => {
+      return actions.map(a => {
+
+
+        // console.log(a);
+        const data = a.payload.val();
+        const id = a.payload.key;
+        return { id, ...data };
+      });
+    });
+  }
 
 
 

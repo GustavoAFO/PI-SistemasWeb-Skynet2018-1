@@ -16,10 +16,36 @@
       </div>
       <div class="col-sm-2">
         <!-- data-dismiss="alert" -->
-        <button type="button" class="btn btn-primary"  (click)="cadastrar(item)">
+        <button type="button" class="btn btn-primary" (click)="cadastrar(item)">
           CADASTRAR
         </button>
       </div>
     </div>
   </div>
+
+
+
+  <p class="lead">Lista de NodeMCU's Cadastrados:</p>
+
+
+  <div *ngFor="let item of itemsCadastradosObservable | async" class="alert alert-warning alert-dismissible fade show" role="alert">
+    <div class="row">
+      <div class="col-sm-10">
+        <span>
+          <strong>
+            NodeMCU: {{item.nome}}
+          </strong>
+          <!-- {{item.data}} {{item.tempo}} -->
+        </span>
+      </div>
+      <!-- <div class="col-sm-2">
+        <button type="button" class="btn btn-primary"  (click)="cadastrar(item)">
+          CADASTRAR
+        </button>
+      </div> -->
+    </div>
+  </div>
+
+
+
 </div>

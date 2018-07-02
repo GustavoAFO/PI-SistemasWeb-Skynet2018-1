@@ -23,7 +23,7 @@
     </div>
   </div> -->
 
-  
+
   <!-- .reverse() -->
   <div *ngFor="let item of items">
 
@@ -34,7 +34,17 @@
       <button type="button" class="close" aria-label="Close" (click)="exibido(item)">
         <span aria-hidden="true">&times;</span>
       </button>
-      <strong>NodeMCU: {{item.nodeMCU}} Sensor: {{item.sensor}} {{item.data}} {{item.tempo}}</strong>
+
+      <p class="col-12">
+        <strong>Node<!-- MCU -->: {{item.nodeMCU}} </strong>
+      </p>
+      <p class="col-12">
+        Sensor: {{item.sensor}}
+      </p>
+      <p class="col-12">
+        <strong> <!-- Data: --> {{item.data}} {{item.tempo}} </strong>
+      </p>
+
     </div>
   </div>
 
